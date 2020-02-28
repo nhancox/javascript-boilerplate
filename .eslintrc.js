@@ -539,11 +539,7 @@ const ecmaScript6 = {
   ],
 
   // Fixable
-  "prefer-destructuring": [
-    "error",
-    { array: true, object: true },
-    { enforceForRenamedProperties: false }
-  ],
+  "prefer-destructuring": "off",
 
   // Fixable
   "prefer-numeric-literals": "error",
