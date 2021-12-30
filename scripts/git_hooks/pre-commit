@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+files_to_lint="$(git diff --cached --diff-filter=ACM --name-only)"
+
+if [[ -z "${files_to_lint}" ]]; then
+    exit 0
+fi
+
+get_lint_files() {
+    grep -E "\.($1)$" <<< "${files_to_lint}"
+}
+
+eslint_files_to_lint="$(get_lint_files 'cjs|js|mjs')"
+echo "${eslint_files_to_lint}" | xargs npx eslint --fix --quiet
+eslint_exit_code=$?
+
+prettier_files_to_lint="$(get_lint_files 'cjs|js|json|json5|jsonc|md|mjs')"
+echo "${prettier_files_to_lint}" \
+    | xargs npx prettier --ignore-unknown --loglevel silent --write
+prettier_exit_code=$?
+
+markdownlint_files_to_lint="$(get_lint_files 'md')"
+echo "${markdownlint_files_to_lint}" | xargs npx markdownlint-cli --fix --quiet
+markdownlint_exit_code=$?
+
+echo "${files_to_lint}" | xargs git add
+
+exit_code_total=$(( eslint_exit_code + prettier_exit_code + markdownlint_exit_code ))
+lint_exit_code=0
+
+if [[ "${exit_code_total}" -gt 0 ]]; then
+    lint_exit_code=1
+fi
+
+exit "${lint_exit_code}"

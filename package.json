@@ -1,6 +1,6 @@
 {
   "name": "javascript-boilerplate",
-  "description": "Boilerplate for JavaScript projects with opinionated linters and formatters",
+  "description": "Boilerplate for JavaScript projects with linters, formatters and Git hooks",
   "homepage": "https://github.com/nhancox/javascript-boilerplate",
   "bugs": {
     "url": "https://github.com/nhancox/javascript-boilerplate/issues"
@@ -14,28 +14,26 @@
     "type": "git",
     "url": "https://github.com/nhancox/javascript-boilerplate.git"
   },
-  "scripts": {
-    "lint:eslint": "eslint --fix",
-    "lint:markdown": "markdownlint",
-    "lint:prettier": "prettier --loglevel silent --write",
-    "lint:all": "run-s lint:all:eslint lint:all:prettier lint:all:markdown",
-    "lint:all:eslint": "npm run lint:eslint -- . --ext .js",
-    "lint:all:markdown": "npm run lint:markdown -- \"**/*.md\" --ignore node_modules",
-    "lint:all:prettier": "npm run lint:prettier -- \"**/*.{css,html,json,json5,jsonc,md}\""
+  "engines": {
+    "node": ">=16.0.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "type": "module",
+  "scripts": {
+    "lint:all": "npm run lint:all:prettier && npm run lint:all:eslint && npm run lint:all:markdownlint",
+    "lint:all:eslint": "eslint --ext .cjs,.js,.mjs --fix .",
+    "lint:all:markdownlint": "markdownlint --fix --ignore node_modules '**/*.md'",
+    "lint:all:prettier": "prettier --write .",
+    "lint:eslint": "eslint --fix",
+    "lint:markdownlint": "markdownlint --fix",
+    "lint:prettier": "prettier --write"
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^4.2.3",
-    "lint-staged": "^10.0.7",
-    "markdownlint-cli": "^0.22.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^1.19.1"
+    "eslint": "^8.4.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-node": "^11.1.0",
+    "markdownlint-cli": "^0.30.0",
+    "prettier": "2.5.1",
+    "prettier-eslint": "^13.0.0"
   }
 }
