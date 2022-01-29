@@ -11,17 +11,27 @@ get_lint_files() {
 }
 
 eslint_files_to_lint="$(get_lint_files 'cjs|js|mjs')"
-echo "${eslint_files_to_lint}" | xargs npx eslint --fix --quiet
-eslint_exit_code=$?
+eslint_exit_code=0
+if [[ -n "${eslint_files_to_lint}" ]]; then
+    echo "${eslint_files_to_lint}" | xargs npx eslint --fix --quiet
+    eslint_exit_code=$?
+fi
 
 prettier_files_to_lint="$(get_lint_files 'cjs|js|json|json5|jsonc|md|mjs')"
-echo "${prettier_files_to_lint}" \
-    | xargs npx prettier --ignore-unknown --loglevel silent --write
-prettier_exit_code=$?
+prettier_exit_code=0
+if [[ -n "${prettier_files_to_lint}" ]]; then
+    echo "${prettier_files_to_lint}" \
+        | xargs npx prettier --ignore-unknown --loglevel silent --write
+    prettier_exit_code=$?
+fi
 
 markdownlint_files_to_lint="$(get_lint_files 'md')"
-echo "${markdownlint_files_to_lint}" | xargs npx markdownlint-cli --fix --quiet
-markdownlint_exit_code=$?
+markdownlint_exit_code=0
+if [[ -n "${markdownlint_files_to_lint}" ]]; then
+    echo "${markdownlint_files_to_lint}" \
+        | xargs npx markdownlint-cli --fix --quiet
+    markdownlint_exit_code=$?
+fi
 
 echo "${files_to_lint}" | xargs git add
 
